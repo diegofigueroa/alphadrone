@@ -9,5 +9,16 @@
     <string name="action_connect">Connect</string>
     <string name="action_take_off">Take off</string>
     <string name="action_land">Land</string>
+        
+	<string name="msg_hover">Hover</string>
+	<string name="msg_forward">Forward</string>
+	<string name="msg_backward">Backward</string>		
+	<string name="msg_up">Up</string>
+	<string name="msg_down">Down</string>	
+	<string name="msg_left">Left</string>
+	<string name="msg_right">Right</string>	
+	<string name="msg_spin">Spin</string>
+	<string name="msg_move">Move</string>
+	
 	
 </resources>

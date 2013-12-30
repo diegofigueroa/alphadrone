@@ -9,6 +9,7 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,9 +32,19 @@ public class MainActivity extends Activity {
 	private static final int VIDEO_TIMEOUT = 60000;
 	
 	private static ARDrone sDrone;
-	//private ARDrone drone;
 	
 	private boolean landed = true;
+	private SparseArray<String> buttonIdMap = new SparseArray<String>();
+		
+	private final static String UP = "up";
+	private final static String DOWN = "down";
+	private final static String LEFT = "left";
+	private final static String RIGHT = "right";
+	private final static String FORWARD = "forward";
+	private final static String BACKWARD = "backward";
+	private final static String SPIN_LEFT = "spin left";
+	private final static String SPIN_RIGHT = "spin right";
+	private final static String HOVER = "hover";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -44,6 +55,7 @@ public class MainActivity extends Activity {
         java.lang.System.setProperty("java.net.preferIPv6Addresses", "false");
         
 		setUpTakeOffBtn();
+		setupButtons();
 	}
 	
 	@Override
@@ -103,6 +115,46 @@ public class MainActivity extends Activity {
     private boolean connected(){
     	return !disconnected();
     }
+    
+	private void setupButtons() {
+		ControlsListener listener = new ControlsListener();
+		
+		Button btn = (Button)findViewById(R.id.btnUp);
+		btn.setOnClickListener(listener);
+		buttonIdMap.put(btn.getId(), UP);
+
+		btn = (Button)findViewById(R.id.btnDown);
+		btn.setOnClickListener(listener);
+		buttonIdMap.put(btn.getId(), DOWN);
+
+		btn = (Button)findViewById(R.id.btnLeft);
+		btn.setOnClickListener(listener);
+		buttonIdMap.put(btn.getId(), LEFT);
+
+		btn = (Button)findViewById(R.id.btnRight);
+		btn.setOnClickListener(listener);
+		buttonIdMap.put(btn.getId(), RIGHT);
+		
+		btn = (Button)findViewById(R.id.btnForward);
+		btn.setOnClickListener(listener);
+		buttonIdMap.put(btn.getId(), FORWARD);
+		
+		btn = (Button)findViewById(R.id.btnBackward);
+		btn.setOnClickListener(listener);
+		buttonIdMap.put(btn.getId(), BACKWARD);
+		
+		btn = (Button)findViewById(R.id.btnSpinLeft);
+		btn.setOnClickListener(listener);
+		buttonIdMap.put(btn.getId(), SPIN_LEFT);
+		
+		btn = (Button)findViewById(R.id.btnSpinRight);
+		btn.setOnClickListener(listener);
+		buttonIdMap.put(btn.getId(), SPIN_RIGHT);		
+
+		btn = (Button)findViewById(R.id.btnHover);
+		btn.setOnClickListener(listener);
+		buttonIdMap.put(btn.getId(), HOVER);		
+	}    
 	
 	private void setUpTakeOffBtn(){
 		Button btn = (Button)findViewById(R.id.drone_take_off);
@@ -128,7 +180,6 @@ public class MainActivity extends Activity {
         if(manager.isWifiEnabled()){
             Crouton.showText(this, "Connecting via " +  manager.getConnectionInfo().getSSID() + "...", Style.INFO);
             (new DroneConnector()).execute(MainActivity.sDrone);
-            //(new DroneStarter()).execute(MainActivity.sDrone);
         }else{
         	Crouton.showText(this, "Connect to your drone's wifi first.", Style.ALERT);
         }
@@ -184,6 +235,42 @@ public class MainActivity extends Activity {
 		}
 	}
 	
+	private class ControlsListener implements OnClickListener {
+
+		@Override
+		public void onClick(View v) {
+			Button btn = (Button)v;
+			String action = buttonIdMap.get(btn.getId());
+			if (action != null) {
+				if (action.equals(RIGHT)) {
+					right(1.0f);
+				} else if (action.equals(LEFT)) {
+					left(1.0f);
+				} else if (action.equals(FORWARD)) {
+					forward(1.0f);
+				} else if (action.equals(BACKWARD)) {
+					backward(1.0f);					
+				} else if (action.equals(UP)) {
+					up(1.0f);
+				} else if (action.equals(DOWN)) {
+					down(1.0f);
+				} else if (action.equals(SPIN_LEFT)) {
+					turnLeft(1.0f);
+				} else if (action.equals(SPIN_RIGHT)) {
+					turnRight(1.0f);
+				} else if (action.equals(HOVER)) {
+					try {
+						sDrone.hover();
+					} catch (IOException e) {
+						Log.e(TAG, "Faliled to execute land command.", e);
+					}
+				}
+			} 
+		}
+		
+	}
+	
+	/*
 	private class DroneStarter extends AsyncTask<ARDrone, Integer, Boolean> {
 	    
 	    @Override
@@ -223,7 +310,7 @@ public class MainActivity extends Activity {
 	        }
 	    }
 	   }
-	
+	*/
 	private class DroneConnector extends AsyncTask<ARDrone, Integer, ARDrone>{
 		
 	    @Override
@@ -240,7 +327,6 @@ public class MainActivity extends Activity {
 	            drone.selectVideoChannel(ARDrone.VideoChannel.HORIZONTAL_ONLY);
 	            drone.setCombinedYawMode(true);
 	            
-	            //drones[0] = drone;
 	            sDrone = drone;
 	        }catch(Exception e){
 	            Log.e(TAG, "Failed to connect to drone.", e);
@@ -263,11 +349,65 @@ public class MainActivity extends Activity {
 	    protected void onPostExecute(ARDrone drone){
 	        if(connected()){
 	        	Crouton.showText(MainActivity.this, "Connected.", Style.CONFIRM);
-	            //droneOnConnected();
 	        }else{
 	        	Crouton.showText(MainActivity.this, "Connection failed.", Style.ALERT);
 	        }
-	    }
-   }
-
+	    }   
+    }
+	
+	public void right(float tilt) {
+		if (connected()) {
+			try {
+				sDrone.move(tilt, 0.0f, 0.0f, 0.0f);
+	        }catch(IOException e){
+	            Log.e(TAG, "Faliled to execute land command.", e);
+	        } 
+		}
+	}
+	
+	public void left(float tilt) {
+		right(tilt * -1);
+	}
+	
+	public void backward(float tilt) {
+		if (connected()) {
+			try {
+				sDrone.move(0.0f, tilt, 0.0f, 0.0f);
+	        }catch(IOException e){
+	            Log.e(TAG, "Faliled to execute land command.", e);
+	        } 
+		}
+	}	
+	
+	public void forward(float tilt) {
+		backward(tilt * -1);
+	}
+	
+	public void up(float speed) {
+		if (connected()) {
+			try {
+				sDrone.move(0.0f, 0.0f, speed, 0.0f);
+	        }catch(IOException e){
+	            Log.e(TAG, "Faliled to execute land command.", e);
+	        } 
+		}
+	}	
+	
+	public void down(float speed) {
+		up(speed * -1);
+	}
+	
+	public void turnRight(float speed) {
+		if (connected()) {
+			try {
+				sDrone.move(0.0f, 0.0f, 0.0f, speed);
+	        }catch(IOException e){
+	            Log.e(TAG, "Faliled to execute land command.", e);
+	        } 
+		}
+	}
+	
+	public void turnLeft(float speed) {
+		turnRight(speed * -1);
+	}	
 }
