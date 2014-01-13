@@ -13,7 +13,112 @@
         android:id="@+id/drone_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-	
+
+    <LinearLayout         
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+    	android:layout_height="wrap_content">
+    
+	    <LinearLayout         
+	        android:layout_width="match_parent"
+	        android:orientation="horizontal"
+	    	android:layout_height="wrap_content">
+		     <Button
+			      android:id="@+id/btnForward"
+			      android:layout_weight="1"
+			      android:layout_width="0dp"
+			      android:layout_height="wrap_content"
+			      android:layout_gravity="bottom"
+			      android:text="@string/msg_forward" />
+		     <Button
+			      android:id="@+id/btnBackward"
+			      android:layout_weight="1"
+			      android:layout_width="0dp"
+			      android:layout_height="wrap_content"
+			      android:layout_gravity="bottom"
+			      android:text="@string/msg_backward" />       
+		</LinearLayout>     
+        
+	    <LinearLayout         
+	        android:layout_width="match_parent"
+	        android:orientation="horizontal"
+	    	android:layout_height="wrap_content">
+		     <Button
+			      android:id="@+id/btnLeft"
+			      android:layout_weight="1"
+			      android:layout_width="0dp"
+			      android:layout_height="wrap_content"
+			      android:layout_gravity="bottom"
+			      android:text="@string/msg_left" />
+		     <Button
+			      android:id="@+id/btnRight"
+			      android:layout_weight="1"
+			      android:layout_width="0dp"
+			      android:layout_height="wrap_content"
+			      android:layout_gravity="bottom"
+			      android:text="@string/msg_right" />       
+		</LinearLayout>
+	</LinearLayout> 
+	          
+    <LinearLayout         
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+    	android:layout_height="wrap_content">
+    
+	    <LinearLayout         
+	        android:layout_width="match_parent"
+	        android:orientation="horizontal"
+	    	android:layout_height="wrap_content">
+		     <Button
+			      android:id="@+id/btnUp"
+			      android:layout_weight="1"
+			      android:layout_width="0dp"
+			      android:layout_height="wrap_content"
+			      android:layout_gravity="bottom"
+			      android:text="@string/msg_up" />
+		     <Button
+			      android:id="@+id/btnDown"
+			      android:layout_weight="1"
+			      android:layout_width="0dp"
+			      android:layout_height="wrap_content"
+			      android:layout_gravity="bottom"
+			      android:text="@string/msg_down" />       
+		</LinearLayout>     
+        
+		<TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        style="?android:attr/textAppearanceLarge"
+	        android:text="@string/msg_spin"/>    
+        	    
+	    <LinearLayout         
+	        android:layout_width="match_parent"
+	        android:orientation="horizontal"
+	    	android:layout_height="wrap_content">
+		     <Button
+			      android:id="@+id/btnSpinLeft"
+			      android:layout_weight="1"
+			      android:layout_width="0dp"
+			      android:layout_height="wrap_content"
+			      android:layout_gravity="bottom"
+			      android:text="@string/msg_left" />
+		     <Button
+			      android:id="@+id/btnSpinRight"
+			      android:layout_weight="1"
+			      android:layout_width="0dp"
+			      android:layout_height="wrap_content"
+			      android:layout_gravity="bottom"
+			      android:text="@string/msg_right" />       
+		</LinearLayout>
+	</LinearLayout>
+	    
+     <Button
+	      android:id="@+id/btnHover"
+	      android:layout_width="match_parent"
+	      android:layout_height="wrap_content"
+	      android:layout_gravity="bottom"
+	      android:text="@string/msg_hover" />
+         
     <LinearLayout
         android:layout_width="match_parent"
     	android:layout_height="0dip"
